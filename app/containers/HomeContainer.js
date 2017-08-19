@@ -67,7 +67,7 @@ class HomeContainer extends React.Component {
 		this.setState(previousState => {
     		return { 
     			renderCoursesView : false,
-    			renderAboutView : false
+    			renderAboutView : false,
 				renderUnitsView : false,
 				renderVideosView : false,
 				renderPlayerView : false,

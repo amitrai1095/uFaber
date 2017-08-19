@@ -7,7 +7,8 @@ let justLoggedOutFlag = false
 const Downloader = require('./assets/lib/filedownloader')
 let downloadInstances = []
 let downloadInstanceKey = 0
-let httpRequest = require('request')
+var http = require('http');
+var fileSystem  = require('fs');
 
 let footerStyle = 0 // 0 indicates styling properties for login screen and 1 indicates style properties for other screens
 let downloadQueue = [
@@ -16,36 +17,6 @@ let downloadQueue = [
 let unitDownloadProgress = [
   
 ] // Array to store the download progress of units
-
-var http = require('http');
-var fsa  = require('fs');
-var file = [];
-let obj = {
-  'url': 'http://s3.ap-south-1.amazonaws.com/encrypted-course-videos/upsc/Constitution.zip',
-  'file': fsa.createWriteStream("assets/8575/49/Constitution1.zip"),
-  'name':'Consti1'
-}
-file.push(obj);
-dl(obj)
-
-obj = {
-  'url': 'http://s3.ap-south-1.amazonaws.com/encrypted-course-videos/upsc/Constitution.zip',
-  'file': fsa.createWriteStream("assets/8575/49/Constitution2.zip"),
-  'name':'Consti2'
-}
-file.push(obj)
-dl(obj)
-
-function dl(fileObject){
-  http.get(fileObject.url, function(response) {
-    response.pipe(fileObject.file)
-    response.on('end', function(){
-      console.log('working')
-      console.log(fileObject.name)
-      console.log(response)
-    })
-  });
-}
 
 // Function to create directories for vidoes
 function createDirectories(directoryList){
@@ -73,15 +44,13 @@ function setIsInVideosFlag(){
 
 // Function to extract the video from the ZIP file
 function extractZip(arg){
-  let indexOfCurrentVideo = downloadQueue.findIndex(x => x.videoUrl === arg.url)
+  let indexOfCurrentVideo = downloadQueue.findIndex(x => x.videoUrl === arg.videoUrl)
   let currentUnitId = downloadQueue[indexOfCurrentVideo].unitId
   let indexOfCurrentUnit = unitDownloadProgress.findIndex(x => x.unitId === currentUnitId)
   
-  let pathName = arg.filePath.split('.')[0]
-  let videoUrl = pathName.split('\\')[1] + '/' + pathName.split('\\')[2] + '/' + pathName.split('\\')[3]
-  let zipPath = arg.filePath.split('\\')[0] + '/' + arg.filePath.split('\\')[1] + '/' + arg.filePath.split('\\')[2] + '/' + arg.filePath.split('\\')[3]
-  let targetPath = '../../assets/' + videoUrl + '/'
-  zipPath = 'assets/' + arg.filePath.split('\\')[1] + '/' + arg.filePath.split('\\')[2] + '/' + arg.filePath.split('\\')[3]
+  let videoUrl = arg.downloadPath + '/' + arg.downloadAs.split('.')[0]
+  let zipPath = 'assets/' + arg.downloadPath + '/' + arg.downloadAs
+  let targetPath = 'assets/' + videoUrl + '/'
 
   const path = require('path')
   let t = path.join(__dirname, targetPath)
@@ -129,26 +98,27 @@ function pause(){
 }
 
 // FUnction to download a video
-function downloadVideo(videoUrl, downloadPath){
-  // const {ipcRenderer} = require('electron')
-
-  // ipcRenderer.on('video-downloaded', (event, arg) => {
-  //   console.log(arg)
-  //   extractZip(arg)
-  // })
-
-  // ipcRenderer.on('video-download-progress', (event, arg) => {
-  //   console.log(arg)
-  //   updateVideoInterface(arg, 1)
-  // })
-
+function downloadVideo(videoUrl, downloadPath, downloadAs){
   let arg = {
     'videoUrl': videoUrl,
-    'downloadPath': downloadPath
+    'downloadPath': downloadPath,
+    'downloadAs' : downloadAs
   }
   console.log(arg)
-  // ipcRenderer.send('download-video', arg)
-  test(arg)
+  getVideo(arg)
+}
+
+function getVideo(fileObject){
+  let completeDownloadPath = 'assets/' + fileObject.downloadPath + '/' + fileObject.downloadAs
+  let downloadUrl = fileObject.videoUrl
+  downloadUrl = 'http://' + downloadUrl.split('://')[1]
+
+  http.get(downloadUrl, function(response) {
+    response.pipe(fileSystem.createWriteStream(completeDownloadPath))
+    response.on('end', function(){
+      extractZip(fileObject)
+    })
+  });
 }
 
 function test(arg){
@@ -222,7 +192,8 @@ function addToDownloadQueue(videoId, videoUrl, unitId, courseId){
     }
     downloadQueue.push(downloadObject)
     let downloadPath = courseId + "/" + unitId
-    downloadVideo(videoUrl, downloadPath)
+    let downloadAs = videoUrl.split('/')[videoUrl.split('/').length - 1]
+    downloadVideo(videoUrl, downloadPath, downloadAs)
   }
 }
 

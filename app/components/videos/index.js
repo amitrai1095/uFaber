@@ -32,7 +32,7 @@ export default class VideosComponent extends Component {
 				_.setState(previousState => {
 		    		return { 
 		    			downloadedVideo : {
-		    				url: data.url,
+		    				url: data.videoUrl,
 			    			localPath: localPath
 		    			}
 		    		}

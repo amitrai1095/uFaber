@@ -19,7 +19,7 @@ export default class UnitsComponent extends Component {
 		let _ = this;
 		window.updateUnitInterface = function(data){
 			videosDb.find({
-				url: data.url
+				url: data.videoUrl
 			}, function(err, docs){
 				let idData = docs[0].unitId + '-' + docs[0].courseId
 				_.setState(previousState => {
