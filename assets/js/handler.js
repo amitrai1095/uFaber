@@ -7,6 +7,7 @@ let justLoggedOutFlag = false
 const Downloader = require('./assets/lib/filedownloader')
 let downloadInstances = []
 let downloadInstanceKey = 0
+let httpRequest = require('request')
 
 let footerStyle = 0 // 0 indicates styling properties for login screen and 1 indicates style properties for other screens
 let downloadQueue = [
@@ -20,18 +21,27 @@ var http = require('http');
 var fsa  = require('fs');
 var file = [];
 let obj = {
-  'url': '',
-  'file': fsa.createWriteStream("assets/8575/49/Constitution1.zip")
+  'url': 'http://s3.ap-south-1.amazonaws.com/encrypted-course-videos/upsc/Constitution.zip',
+  'file': fsa.createWriteStream("assets/8575/49/Constitution1.zip"),
+  'name':'Consti1'
 }
 file.push(obj);
+dl(obj)
 
-for(let i=0; i<file.length; i++){
-  http.get("http://s3.ap-south-1.amazonaws.com/encrypted-course-videos/upsc/Constitution.zip", function(response) {
-    console.log(response)
-    console.log(i)
-    response.pipe(file[i].file, {end: false})
+obj = {
+  'url': 'http://s3.ap-south-1.amazonaws.com/encrypted-course-videos/upsc/Constitution.zip',
+  'file': fsa.createWriteStream("assets/8575/49/Constitution2.zip"),
+  'name':'Consti2'
+}
+file.push(obj)
+dl(obj)
+
+function dl(fileObject){
+  http.get(fileObject.url, function(response) {
+    response.pipe(fileObject.file)
     response.on('end', function(){
       console.log('working')
+      console.log(fileObject.name)
       console.log(response)
     })
   });
