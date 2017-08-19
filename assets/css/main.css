@@ -1,0 +1,366 @@
+::-webkit-input-placeholder {
+    color: #413935;
+}
+
+.no-left-padding{
+	padding-left: 0px !important;
+}
+
+#app{
+	width: 100%;
+	height: 100%;
+}
+
+.login-container{
+	width: 100%;
+	height: 100vh;
+	background-color: #ff883a;
+	padding-top: 50px;
+}
+
+.login-title{
+	text-align: center;
+}
+
+.login-wrapper{
+	text-align: center;
+}
+
+.login-bottom{
+	text-align: center;
+}
+
+.login-email-input{
+	width: 100%;
+    border: none;
+    height: 35px;
+    color: #413935;
+    padding-left: 10px;
+    padding-right: 10px;
+    margin-top: 35px;
+}
+
+.login-password-input{
+	width: 100%;
+	margin-top: 20px;
+    border: none;
+    height: 35px;
+    color: #413935;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.login-submit-btn{
+	width: 100%;
+	border: none;
+	background-color: #ff6501;
+	color: white;
+	text-align: center;
+	height: 35px;
+	margin-top: 25px;
+}
+
+.login-t-and-c-warning{
+	margin-top: 30px;
+	text-align: center;
+	color: #413935;
+}
+
+.login-terms-of-service-span{
+	text-decoration: underline;
+	cursor: pointer;
+}
+
+.login-privacy-policy-span{
+	text-decoration: underline;
+	cursor: pointer;
+}
+
+.login-forgot-password{
+	text-align: center;
+	text-decoration: underline;
+	margin-top: 15px;
+	cursor: pointer;
+}
+
+.noInvalidEmailError{
+	display: none;
+}
+
+.invalidEmailError{
+	display: block;
+	color: red;
+}
+
+.home-container{
+	width: 100%;
+	height: 100vh;
+	background-color: #eeeeee;
+}
+
+.navbar-container{
+	background: #fff;
+    height: 100px;
+    box-shadow: 10px 8px 20px #d4d4d4;
+}
+
+.navbar-user-photo-container{
+	margin-top: 20px;
+	padding-right: 0px;
+    text-align: center;
+}
+
+.navbar-user-details-container{
+	border-right: 2px solid #e0dedf;
+    margin-top: 16px;
+}
+
+.navbar-user-name{
+	margin-top: 25px;
+    font-weight: bold;
+    margin-bottom: 0px;
+    font-size: 16px;
+    color: #4e3432;
+}
+
+.navbar-user-email{
+	font-size: 13px;
+	color: #4e3432;
+}
+
+.menu-option-active{
+	height: 100px;
+    text-align: center;
+	padding-left: 12px !important;
+	border-bottom: 2px solid #4e3432;
+	cursor: pointer;
+	background-color: #f6f6f6;
+}
+
+.menu-option-inactive{
+	height: 100px;
+    text-align: center;
+	padding-left: 12px !important;
+	cursor: pointer;
+}
+
+.menu-option-icon{
+	margin-top: 26px;
+}
+
+.menu-option-name{
+	font-size: 13px;
+}
+
+.menu-logout-option{
+	float: right;
+	cursor: pointer;
+}
+
+.breadcrumps-container{
+	margin-top: 30px;
+}
+
+.breadcrump-text{
+	color: #4d322e;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.breadcrump-arrow{
+	height: 13px;
+    margin-left: 10px;
+}
+
+.breadcrump-part-1{
+	cursor: pointer;
+}
+
+.breadcrump-part-n{
+	margin-left: 10px;
+	cursor: pointer;
+}
+
+.home-content{
+	height: 70%;
+    overflow-y: auto;
+    padding-bottom: 20px;
+    margin-top: -15px;
+}
+
+.course-card-container{
+	background: #fff;
+    margin-top: 30px;
+    height: 100px;
+}
+
+.course-card-left-container{
+	text-align: center;
+}
+
+.course-card-center-container{
+	margin-top: 15px;
+}
+
+.course-card-center-lower-container{
+	margin-top: 10px;
+}
+
+.course-card-right-container{
+	text-align: end;
+    padding-top: 28px;
+}
+
+.course-card-ring{
+	margin-top: 30px;
+}
+
+.course-card-right-arrow{
+	cursor: pointer;
+	margin-top: 15px;
+}
+
+.course-card-title{
+	color: #56443e;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.course-card-resources-text{
+	font-size: 13px;
+}
+
+.course-card-start-date-text{
+	font-size: 13px;
+    font-style: italic;
+}
+
+.course-card-validity-text{
+	font-size: 13px;
+    font-style: italic;
+}
+
+.app-download-text{
+	text-align: center;
+    font-size: 16px;
+    font-weight: bold;
+    color: #56443e;
+    margin-top: 30px;
+}
+
+.app-download-banner-container{
+	text-align: center;
+    margin-top: 18px;
+}
+
+.app-download-banner{
+	cursor: pointer;
+	width: 16%;
+}
+
+.unit-card-title{
+	margin-top: 29px;
+}
+
+.unit-card-download-icon-container{
+	text-align: end;
+    padding-top: 18px;
+}
+
+.unit-card-download-percent-container{
+	margin-top: 8px;
+}
+
+.unit-card-download-percent{
+	font-weight: bold;
+	color: #56443e;
+	opacity: 0;
+}
+
+.player{
+	width: 100%;
+}
+
+.video-description{
+	font-size: 14px;
+	color: #56443e;
+	line-height: 23px;
+    margin-top: 15px;
+}
+
+.video-description-title{
+	font-weight: bold
+}
+
+.support-container{
+	background: #fff;
+    height: 85px;
+    margin-top: 50px;
+}
+
+.support-left-container{
+	border-right: 2px solid #e0dedf;
+    margin-top: 16px;
+}
+
+.support-center-container{
+	border-right: 2px solid #e0dedf;
+    margin-top: 16px;
+}
+
+.support-right-container{
+	border-right: none;
+    margin-top: 16px;
+}
+
+.support-type-title{
+	margin-left: 10px;
+}
+
+.support-info{
+	margin-top: 6px;
+}
+
+.server-sync-text{
+	margin-top: 18px;
+    font-size: 20px;
+    color: #4c3430;
+}
+
+.server-sync-btn-container{
+	text-align: center;
+}
+
+.server-sync-btn{
+	margin-top: 25px;
+    height: 40px;
+    border: none;
+    outline: none;
+    background: #4c3430;
+    color: #fff;
+    width: 115px;
+    border-radius: 10px;
+}
+
+.footer{
+	position: fixed;
+	bottom: 0px;
+	padding-top: 10px;
+	width: 100%;
+}
+
+.powered-by-text{
+	text-align: center;
+	margin-bottom: 0px;
+    font-style: italic;
+    font-size: 13px;
+    color: #413935;
+    cursor: pointer;
+}
+
+.powered-by-info-text{
+	text-align: center;
+	font-size: 13.4px;
+    color: #413935;
+    cursor: pointer;
+}
