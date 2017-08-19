@@ -1238,7 +1238,8 @@ var UnitComponent = function (_Component) {
 	}, {
 		key: 'componentWillReceiveProps',
 		value: function componentWillReceiveProps(nextProps) {
-			if (nextProps.downloadedId.split('-')[0] === this.props.unit.id && nextProps.downloadedId.split('-')[1] === this.props.unit.courseId) {
+			var unitUrl = this.props.unit.id + "-" + this.props.unit.courseId;
+			if (nextProps.downloadedId === unitUrl) {
 				var videosNotDownloaded = this.props.unit.videosNotDownloaded;
 				videosNotDownloaded = videosNotDownloaded - 1;
 				if (videosNotDownloaded === 0) {
@@ -1263,6 +1264,14 @@ var UnitComponent = function (_Component) {
 						});
 					}
 				}
+				unitsDb.update({
+					id: this.props.unit.id,
+					courseId: this.props.unit.courseId
+				}, {
+					$set: {
+						videosNotDownloaded: videosNotDownloaded
+					}
+				}, function (err, docs) {});
 			}
 		}
 	}, {
@@ -1390,6 +1399,7 @@ var UnitsComponent = function (_Component) {
 					url: data.videoUrl
 				}, function (err, docs) {
 					var idData = docs[0].unitId + '-' + docs[0].courseId;
+					console.log(idData);
 					_.setState(function (previousState) {
 						return { downloadedId: idData };
 					});
@@ -1491,6 +1501,7 @@ var VideoComponent = function (_Component) {
 				this.setState(function (previousState) {
 					return {
 						isDownloaded: true,
+						isDownloading: false,
 						localPath: _this2.props.video.localPath
 					};
 				});

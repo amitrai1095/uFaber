@@ -26,6 +26,7 @@ export default class VideoComponent extends Component {
 			this.setState(previousState => {
 	    		return { 
 	    			isDownloaded : true,
+	    			isDownloading : false,
 	    			localPath: this.props.video.localPath
 	    		}
 	    	})

@@ -22,6 +22,7 @@ export default class UnitsComponent extends Component {
 				url: data.videoUrl
 			}, function(err, docs){
 				let idData = docs[0].unitId + '-' + docs[0].courseId
+				console.log(idData)
 				_.setState(previousState => {
 		    		return { downloadedId : idData }
 		    	})

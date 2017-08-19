@@ -28,7 +28,8 @@ export default class UnitComponent extends Component {
 	}
 
 	componentWillReceiveProps(nextProps){
-		if(nextProps.downloadedId.split('-')[0] === this.props.unit.id && nextProps.downloadedId.split('-')[1] === this.props.unit.courseId){
+		let unitUrl = this.props.unit.id + "-" + this.props.unit.courseId
+		if(nextProps.downloadedId === unitUrl){
 			let videosNotDownloaded = this.props.unit.videosNotDownloaded
 			videosNotDownloaded = videosNotDownloaded - 1
 			if(videosNotDownloaded === 0){
@@ -55,6 +56,14 @@ export default class UnitComponent extends Component {
 			    	})
 				}
 			}
+			unitsDb.update({
+					id : this.props.unit.id,
+					courseId : this.props.unit.courseId
+				}, {
+				$set : {
+					videosNotDownloaded : videosNotDownloaded
+				}
+			}, function(err, docs){})
 		}
 	}
 

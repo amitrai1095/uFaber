@@ -50,7 +50,8 @@ function extractZip(arg){
   
   let videoUrl = arg.downloadPath + '/' + arg.downloadAs.split('.')[0]
   let zipPath = 'assets/' + arg.downloadPath + '/' + arg.downloadAs
-  let targetPath = 'assets/' + videoUrl + '/'
+  let targetPath = 'assets/' + videoUrl + '/' // Use this path for development
+  // let targetPath = '../../assets/' + videoUrl + '/' // Use this path in production
 
   const path = require('path')
   let t = path.join(__dirname, targetPath)
@@ -66,7 +67,7 @@ function extractZip(arg){
       if(isInVideosComponent){
         updateVideoInterface(arg, 0, videoUrl)
       }
-      saveVideoLocalPath(arg.url, videoUrl)
+      saveVideoLocalPath(arg.videoUrl, videoUrl)
     })
 }
 
@@ -152,11 +153,9 @@ function downloadUnit(unitId){
 
     }
     else{
-      console.log(downloadQueue)
       for(var i=0; i<videos.length; i++){
-        addToDownloadQueue(videos[i].id, "", unitId)
+        addToDownloadQueue(videos[i].id, videos[i].url, unitId, videos[i].courseId)
       }
-      console.log(downloadQueue)
     }
   })
 }
@@ -209,7 +208,9 @@ function checkIfUnitInDownloads(unitId){
 // FUnction to check if passed video Id is currently in downloads
 function checkIfVideoInDownloads(videoId){
   let returnValue = false
-  if(underscore.where(downloadQueue, {videoId:videoId}).length > 0){
+  let array = underscore.where(downloadQueue, {videoId:videoId})
+  console.log(array)
+  if(array.length > 0 && !array.isCompleted){
     returnValue = true
   }
 
