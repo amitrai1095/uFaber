@@ -141,13 +141,13 @@ var About = function (_Component) {
 		value: function render() {
 			return _react2.default.createElement(
 				'div',
-				{ className: 'container navbar-container no-left-padding' },
+				{ className: 'container navbar-container no-left-padding about-container' },
 				_react2.default.createElement(
 					'div',
 					{ className: 'col-md-12 no-left-padding' },
 					_react2.default.createElement(
 						'p',
-						null,
+						{ className: 'about-us-text' },
 						'Welcome to a whole new world of learning without any constraint of time and location. Learn from the best experts of the industry and immerse into a rich experience of learning online at ufaber.com. Get online self-paced or guided courses for career advancement, school/college studies and entrance exams or just for the knowledge.'
 					)
 				)
@@ -687,13 +687,49 @@ var CourseComponent = function (_Component) {
 	function CourseComponent() {
 		_classCallCheck(this, CourseComponent);
 
-		return _possibleConstructorReturn(this, (CourseComponent.__proto__ || Object.getPrototypeOf(CourseComponent)).apply(this, arguments));
+		var _this = _possibleConstructorReturn(this, (CourseComponent.__proto__ || Object.getPrototypeOf(CourseComponent)).call(this));
+
+		_this.state = {
+			show: false
+		};
+		return _this;
 	}
 
 	_createClass(CourseComponent, [{
 		key: 'navigate',
 		value: function navigate(id, title, e) {
-			this.props.goToUnits(id, title);
+			this.setState(function (previousState) {
+				return {
+					show: true
+				};
+			});
+
+			var _ = this;
+			var z = 1.0;
+			this.bar.animate(z);
+			z = 0.0;
+			setInterval(function () {
+				_.bar.animate(z);
+				if (z === 1.0) {
+					z = 0.0;
+				} else {
+					z = 1.0;
+				}
+			}, 2000);
+			// this.props.goToUnits(id, title)
+		}
+	}, {
+		key: 'componentDidMount',
+		value: function componentDidMount() {
+			this.bar = new ProgressBar.Circle(this.refs.downloadLoader, {
+				strokeWidth: 3,
+				easing: 'easeInOut',
+				duration: 1000,
+				color: '#0c9928',
+				trailColor: '#0c9928',
+				trailWidth: 0.3,
+				svgStyle: null
+			});
 		}
 	}, {
 		key: 'render',
@@ -710,8 +746,8 @@ var CourseComponent = function (_Component) {
 				{ className: 'col-md-12 course-card-container no-left-padding' },
 				_react2.default.createElement(
 					'div',
-					{ className: 'col-md-1 course-card-left-container no-left-padding' },
-					_react2.default.createElement('img', { src: 'assets/images/ring.png', className: 'course-card-ring' })
+					{ className: 'col-md-1 course-card-left-container videoDownloadLoader' },
+					_react2.default.createElement('div', { ref: 'downloadLoader' })
 				),
 				_react2.default.createElement(
 					'div',
@@ -1281,6 +1317,28 @@ var UnitComponent = function (_Component) {
 			this.setState(function (previousState) {
 				return { isDownloading: true };
 			});
+
+			var bar = new ProgressBar.Circle(this.refs.downloadLoader, {
+				strokeWidth: 3,
+				easing: 'easeInOut',
+				duration: 1000,
+				color: '#0c9928',
+				trailColor: '#0c9928',
+				trailWidth: 0.3,
+				svgStyle: null
+			});
+
+			var z = 1.0;
+			bar.animate(z);
+			z = 0.0;
+			setInterval(function () {
+				bar.animate(z);
+				if (z === 1.0) {
+					z = 0.0;
+				} else {
+					z = 1.0;
+				}
+			}, 2000);
 		}
 	}, {
 		key: 'render',
@@ -1297,7 +1355,8 @@ var UnitComponent = function (_Component) {
 				_react2.default.createElement(
 					'div',
 					{ className: 'col-md-1 course-card-left-container no-left-padding' },
-					_react2.default.createElement('img', { src: 'assets/images/ring.png', className: 'course-card-ring' })
+					this.state.isDownloading && _react2.default.createElement('img', { src: 'assets/images/ring.png', className: 'course-card-ring' }),
+					!this.state.isDownloading && _react2.default.createElement('div', { ref: 'downloadLoader' })
 				),
 				_react2.default.createElement(
 					'div',
@@ -2194,7 +2253,7 @@ var HomeContainer = function (_React$Component) {
 			return _react2.default.createElement(
 				'div',
 				{ className: 'home-container' },
-				_react2.default.createElement(_Navbar2.default, { changeScreen: this.changeScreen.bind(this), userName: this.state.userName, userEmail: this.state.userEmail, goToLoginScreen: this.goToLoginScreen.bind(this) }),
+				_react2.default.createElement(_Navbar2.default, { changeScreen: this.changeScreen.bind(this), userName: this.state.userName, userEmail: this.state.userEmail }),
 				_react2.default.createElement(_Breadcrumps2.default, { ref: 'breadcrump', navigateThroughBreadcrumps: this.navigateThroughBreadcrumps.bind(this) }),
 				_react2.default.createElement(
 					'div',
@@ -2256,22 +2315,24 @@ var LoginContainer = function (_React$Component) {
 
 		var _this = _possibleConstructorReturn(this, (LoginContainer.__proto__ || Object.getPrototypeOf(LoginContainer)).call(this, props));
 
-		_this.state = { emailErrorStyleClass: 'noInvalidEmailError', shouldRender: false };
+		_this.state = {};
 		var _ = _this;
-		if (!justLoggedOutFlag) {
-			// Checking if an active session exists
-			userDb.find({}, function (err, docs) {
+		if (justLoggedOutFlag) {
+			_.state = { emailErrorStyleClass: 'noInvalidEmailError', shouldRender: true };
+		} else {
+			_.state = { emailErrorStyleClass: 'noInvalidEmailError', shouldRender: false
+				// Checking if an active session exists
+			};userDb.find({}, function (err, docs) {
 				// userDb is defined in assets/js/database.js
 				if (err || docs.length === 0) {
 					_.setState({ shouldRender: true });
 				} else {
 					setUserData(docs[0].email, docs[0].id);
+					console.log('idhar');
 					toggleFooterStyle();
 					_.props.history.push('/home');
 				}
 			});
-		} else {
-			_.setState({ shouldRender: true });
 		}
 		return _this;
 	}
@@ -2281,19 +2342,10 @@ var LoginContainer = function (_React$Component) {
 		value: function componentDidUpdate() {
 			// Checking if the user field in props is set or not & redirecting to course page if set
 			var responseData = this.props.authReducer.data;
-			if (!justLoggedOutFlag) {
-				if (responseData.length === 1) {
-					toggleFooterStyle();
-					this.props.history.push('/home');
-				}
-			} else {
-				justLoggedOutFlag = false;
-			}
-
-			// Checking if login screen is to be rendered or not
-			var shouldRender = this.state.shouldRender;
-			if (shouldRender) {
-				hideLoadingScreen(); // Function definition in handler.js
+			if (responseData.length === 1) {
+				toggleFooterStyle();
+				console.log('udhar');
+				this.props.history.push('/home');
 			}
 		}
 	}, {

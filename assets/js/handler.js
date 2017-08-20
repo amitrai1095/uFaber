@@ -9,6 +9,7 @@ let downloadInstances = []
 let downloadInstanceKey = 0
 var http = require('http');
 var fileSystem  = require('fs');
+let ProgressBar = require('progressbar.js')
 
 let footerStyle = 0 // 0 indicates styling properties for login screen and 1 indicates style properties for other screens
 let downloadQueue = [
@@ -239,10 +240,14 @@ function showLoadingScreen(){
 }
 
 function logoutUser(){
+  console.log('coming to handler function')
   userDb.remove({}, { multi: true }, function (err, numRemoved) {
     coursesDb.remove({}, { multi: true }, function (err, numRemoved) {
       unitsDb.remove({}, { multi: true }, function (err, numRemoved) {
         videosDb.remove({}, { multi: true }, function (err, numRemoved) {
+          console.log('calling component function')
+          justLoggedOutFlag = true
+          reLoadDatabases()
           navigateToLogin()
         });
       });

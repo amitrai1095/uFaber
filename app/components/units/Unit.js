@@ -16,10 +16,30 @@ export default class UnitComponent extends Component {
 	}
 
 	componentDidMount(){
+		this.bar = new ProgressBar.Circle(this.refs.downloadLoader, {
+			strokeWidth: 3,
+			easing: 'easeInOut',
+			duration: 1000,
+			color: '#0c9928',
+			trailColor: '#0c9928',
+			trailWidth: 0.3,
+			svgStyle: null
+		})
+
 		if(checkIfUnitInDownloads(this.props.unit.id)){
 			this.setState(previousState => {
 	    		return { isDownloading : true }
 	    	})
+	    	startDownloadLoader()
+		}
+
+		if(this.props.unit.videosNotDownloaded === 0){
+			this.bar.set(1.0)
+			this.setState(previousState => {
+				return {
+					allVideosDownloaded ; true
+				}
+			})
 		}
 	}
 
@@ -39,6 +59,8 @@ export default class UnitComponent extends Component {
 		    			isDownloading : false
 		    		}
 		    	})
+		    	this.bar.stop()
+		    	this.bar.set(1.0)
 			}
 			else{
 				if(checkIfUnitInDownloads(this.props.unit.id)){
@@ -54,6 +76,8 @@ export default class UnitComponent extends Component {
 					this.setState(previousState => {
 			    		return { isDownloading : false }
 			    	})
+			    	this.bar.stop()
+			    	this.bar.set(0.0)
 				}
 			}
 			unitsDb.update({
@@ -72,6 +96,23 @@ export default class UnitComponent extends Component {
 		this.setState(previousState => {
     		return { isDownloading : true }
     	})
+    	startDownloadLoader()
+	}
+
+	startDownloadLoader(){
+		let _ = this
+		let z = 1.0;
+		this.bar.animate(z);
+		z = 0.0;
+		setInterval(function(){
+			_.bar.animate(z);
+			if(z === 1.0){
+				z = 0.0
+			}
+			else{
+				z = 1.0
+			}
+		}, 2000)
 	}
 
 	render() {
@@ -79,8 +120,8 @@ export default class UnitComponent extends Component {
 
 		return (
 			<div className="col-md-12 course-card-container no-left-padding">
-				<div className="col-md-1 course-card-left-container no-left-padding">
-					<img src="assets/images/ring.png" className="course-card-ring"/>
+				<div className="col-md-1 course-card-left-container videoDownloadLoader">
+					<div ref="downloadLoader"></div>
 				</div>
 
 				<div className="col-md-9 course-card-center-container no-left-padding">

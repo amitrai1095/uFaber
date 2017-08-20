@@ -192,7 +192,7 @@ class HomeContainer extends React.Component {
 	render() {
 		return(
 			<div className="home-container">
-				<Navbar changeScreen={this.changeScreen.bind(this)} userName={this.state.userName} userEmail={this.state.userEmail} goToLoginScreen={this.goToLoginScreen.bind(this)} />
+				<Navbar changeScreen={this.changeScreen.bind(this)} userName={this.state.userName} userEmail={this.state.userEmail} />
 				<Breadcrumps ref="breadcrump" navigateThroughBreadcrumps={this.navigateThroughBreadcrumps.bind(this)} />
 				<div className="home-content">
 					{

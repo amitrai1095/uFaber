@@ -7,9 +7,13 @@ class LoginContainer extends React.Component {
 
 	constructor(props){
 		super(props)
-		this.state = { emailErrorStyleClass : 'noInvalidEmailError', shouldRender : false }
+		this.state = {}
 		let _ = this
-		if(!justLoggedOutFlag){
+		if(justLoggedOutFlag){
+			_.state = { emailErrorStyleClass : 'noInvalidEmailError', shouldRender : true }
+		}
+		else{
+			_.state = { emailErrorStyleClass : 'noInvalidEmailError', shouldRender : false }
 			// Checking if an active session exists
 			userDb.find({}, function(err, docs){ // userDb is defined in assets/js/database.js
 				if(err || docs.length === 0){
@@ -17,33 +21,21 @@ class LoginContainer extends React.Component {
 				}
 				else{
 					setUserData(docs[0].email, docs[0].id)
+					console.log('idhar')
 					toggleFooterStyle()
 					_.props.history.push('/home')
 				}
 			});
-		}
-		else{
-			_.setState({ shouldRender: true })
 		}
 	}
 
 	componentDidUpdate(){
 		// Checking if the user field in props is set or not & redirecting to course page if set
 		let responseData = this.props.authReducer.data
-		if(!justLoggedOutFlag){
-			if(responseData.length === 1){
-				toggleFooterStyle()
-				this.props.history.push('/home');
-			}
-		}
-		else{
-			justLoggedOutFlag = false
-		}
-
-		// Checking if login screen is to be rendered or not
-		let shouldRender = this.state.shouldRender
-		if(shouldRender){
-			hideLoadingScreen() // Function definition in handler.js
+		if(responseData.length === 1){
+			toggleFooterStyle()
+			console.log('udhar')
+			this.props.history.push('/home');
 		}
 	}
 

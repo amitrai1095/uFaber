@@ -58,3 +58,10 @@ function updateUser(email, password){
 function activeSessionExists(){
 	
 }
+
+function reLoadDatabases(){
+	userDb = new Datastore({ filename: 'assets/databases/user.db', autoload: true });
+	coursesDb = new Datastore({ filename: 'assets/databases/courses.db', autoload: true });
+	unitsDb = new Datastore({ filename: 'assets/databases/lessons.db', autoload: true });
+	videosDb = new Datastore({ filename: 'assets/databases/videos.db', autoload: true });
+}

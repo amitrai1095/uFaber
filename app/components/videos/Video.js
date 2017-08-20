@@ -17,10 +17,21 @@ export default class VideoComponent extends Component {
 	}
 
 	componentDidMount(){
+		this.bar = new ProgressBar.Circle(this.refs.downloadLoader, {
+			strokeWidth: 3,
+			easing: 'easeInOut',
+			duration: 1000,
+			color: '#0c9928',
+			trailColor: '#0c9928',
+			trailWidth: 0.3,
+			svgStyle: null
+		})
+
 		if(checkIfVideoInDownloads(this.props.video.id)){
 			this.setState(previousState => {
 	    		return { isDownloading : true }
 	    	})
+	    	startDownloadLoader()
 		}
 		if(this.props.video.isDownloaded){
 			this.setState(previousState => {
@@ -30,6 +41,7 @@ export default class VideoComponent extends Component {
 	    			localPath: this.props.video.localPath
 	    		}
 	    	})
+	    	this.bar.set(1.0)
 		}
 	}
 
@@ -44,6 +56,23 @@ export default class VideoComponent extends Component {
 		this.setState(previousState => {
     		return { isDownloading : true }
     	})
+    	startDownloadLoader()
+	}
+
+	startDownloadLoader(){
+		let _ = this
+		let z = 1.0;
+		this.bar.animate(z);
+		z = 0.0;
+		setInterval(function(){
+			_.bar.animate(z);
+			if(z === 1.0){
+				z = 0.0
+			}
+			else{
+				z = 1.0
+			}
+		}, 2000)
 	}
 
 	componentWillReceiveProps(nextProps){
@@ -55,6 +84,8 @@ export default class VideoComponent extends Component {
 	    			localPath : nextProps.downloadedVideo.localPath
 	    		}
 	    	})
+	    	this.bar.stop()
+	    	this.bar.set(1.0)
 		}
 
 		if(nextProps.downloadProgress.url === this.props.video.url){
@@ -71,8 +102,8 @@ export default class VideoComponent extends Component {
 
 		return (
 			<div className="col-md-12 course-card-container no-left-padding">
-				<div className="col-md-1 course-card-left-container no-left-padding">
-					<img src="assets/images/play.png" className="course-card-ring"/>
+				<div className="col-md-1 course-card-left-container videoDownloadLoader">
+					<div ref="downloadLoader"></div>
 				</div>
 
 				<div className="col-md-9 course-card-center-container no-left-padding">
