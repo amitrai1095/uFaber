@@ -229,6 +229,7 @@ function saveResources(resources){
 
 // Function to initialize videosNotDownloaded field in lessons table
 function updateResourceCount(){
+	let count = 0
 	for(let i=0; i<courseResourceCount.length; i++){
 		let lessonResourceCount = courseResourceCount[i]
 		let currentCourseId = newCourseIds[i]
@@ -243,7 +244,12 @@ function updateResourceCount(){
 				$set: {
 					videosNotDownloaded:currentLessonResourceCount
 				}
-			}, function(err, doc){})
+			}, function(err, doc){
+				count++
+				if(count === courseResourceCount.length){
+					setServerSyncCompleteIndicator()
+				}
+			})
 		}
 	}
 }

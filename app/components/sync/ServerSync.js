@@ -9,16 +9,51 @@ export default class ServerSyncComponent extends Component {
 	}
 
 	componentDidMount(){
+		this.bar = new ProgressBar.Circle(this.refs.downloadLoader, {
+			strokeWidth: 3,
+			easing: 'easeInOut',
+			duration: 1000,
+			color: '#0c9928',
+			trailColor: '#0c9928',
+			trailWidth: 0.3,
+			svgStyle: null
+		})
+
+		window.setServerSyncCompleteIndicator = function(){
+			_.bar.stop()
+			_.bar.set(1.0)
+		}
 	}
 
 	initSync(e){
 		initServerSync()
+		startDownloadLoader()
+	}
+
+	startDownloadLoader(){
+		let _ = this
+		let z = 1.0;
+		this.bar.animate(z);
+		z = 0.0;
+		setInterval(function(){
+			_.bar.animate(z);
+			if(z === 1.0){
+				z = 0.0
+			}
+			else{
+				z = 1.0
+			}
+		}, 2000)
 	}
 
 	render() {
 		return (
 			<div className="container support-container no-left-padding">
 				<div className="col-md-12">
+					<div className="col-md-1 course-card-left-container videoDownloadLoader">
+						<div ref="downloadLoader"></div>
+					</div>
+					
 					<div className="col-md-7 no-left-padding col-md-offset-1">
 						<h3 className="server-sync-text">Your app is connected to UPSC Pathshala Server</h3>
 					</div>

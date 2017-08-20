@@ -37,7 +37,7 @@ export default class UnitComponent extends Component {
 			this.bar.set(1.0)
 			this.setState(previousState => {
 				return {
-					allVideosDownloaded ; true
+					allVideosDownloaded : true
 				}
 			})
 		}

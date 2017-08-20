@@ -21,7 +21,6 @@ class LoginContainer extends React.Component {
 				}
 				else{
 					setUserData(docs[0].email, docs[0].id)
-					console.log('idhar')
 					toggleFooterStyle()
 					_.props.history.push('/home')
 				}
@@ -32,10 +31,13 @@ class LoginContainer extends React.Component {
 	componentDidUpdate(){
 		// Checking if the user field in props is set or not & redirecting to course page if set
 		let responseData = this.props.authReducer.data
-		if(responseData.length === 1){
+		if(responseData.length === 1 && responseData[0].success){
 			toggleFooterStyle()
-			console.log('udhar')
 			this.props.history.push('/home');
+		}
+
+		if(responseData.length === 1 && responseData[0].failed){
+			showFailedError()
 		}
 	}
 

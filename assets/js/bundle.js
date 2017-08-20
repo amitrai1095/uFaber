@@ -687,49 +687,13 @@ var CourseComponent = function (_Component) {
 	function CourseComponent() {
 		_classCallCheck(this, CourseComponent);
 
-		var _this = _possibleConstructorReturn(this, (CourseComponent.__proto__ || Object.getPrototypeOf(CourseComponent)).call(this));
-
-		_this.state = {
-			show: false
-		};
-		return _this;
+		return _possibleConstructorReturn(this, (CourseComponent.__proto__ || Object.getPrototypeOf(CourseComponent)).apply(this, arguments));
 	}
 
 	_createClass(CourseComponent, [{
 		key: 'navigate',
 		value: function navigate(id, title, e) {
-			this.setState(function (previousState) {
-				return {
-					show: true
-				};
-			});
-
-			var _ = this;
-			var z = 1.0;
-			this.bar.animate(z);
-			z = 0.0;
-			setInterval(function () {
-				_.bar.animate(z);
-				if (z === 1.0) {
-					z = 0.0;
-				} else {
-					z = 1.0;
-				}
-			}, 2000);
-			// this.props.goToUnits(id, title)
-		}
-	}, {
-		key: 'componentDidMount',
-		value: function componentDidMount() {
-			this.bar = new ProgressBar.Circle(this.refs.downloadLoader, {
-				strokeWidth: 3,
-				easing: 'easeInOut',
-				duration: 1000,
-				color: '#0c9928',
-				trailColor: '#0c9928',
-				trailWidth: 0.3,
-				svgStyle: null
-			});
+			this.props.goToUnits(id, title);
 		}
 	}, {
 		key: 'render',
@@ -746,8 +710,8 @@ var CourseComponent = function (_Component) {
 				{ className: 'col-md-12 course-card-container no-left-padding' },
 				_react2.default.createElement(
 					'div',
-					{ className: 'col-md-1 course-card-left-container videoDownloadLoader' },
-					_react2.default.createElement('div', { ref: 'downloadLoader' })
+					{ className: 'col-md-1 course-card-left-container no-left-padding' },
+					_react2.default.createElement('img', { src: 'assets/images/ring.png', className: 'course-card-ring' })
 				),
 				_react2.default.createElement(
 					'div',
@@ -1091,16 +1055,60 @@ var PendriveSyncComponent = function (_Component) {
 	function PendriveSyncComponent() {
 		_classCallCheck(this, PendriveSyncComponent);
 
-		return _possibleConstructorReturn(this, (PendriveSyncComponent.__proto__ || Object.getPrototypeOf(PendriveSyncComponent)).call(this));
+		var _this = _possibleConstructorReturn(this, (PendriveSyncComponent.__proto__ || Object.getPrototypeOf(PendriveSyncComponent)).call(this));
+
+		_this.state = {
+			pendriveConnected: false
+		};
+		return _this;
 	}
 
 	_createClass(PendriveSyncComponent, [{
 		key: 'componentDidMount',
-		value: function componentDidMount() {}
+		value: function componentDidMount() {
+			this.bar = new ProgressBar.Circle(this.refs.downloadLoader, {
+				strokeWidth: 3,
+				easing: 'easeInOut',
+				duration: 1000,
+				color: '#0c9928',
+				trailColor: '#0c9928',
+				trailWidth: 0.3,
+				svgStyle: null
+			});
+
+			var _ = this;
+			window.setNoPendriveText = function () {
+				_.setState(function (previousState) {
+					return { pendriveConnected: true };
+				});
+			};
+			window.setPendriveSyncCompleteIndicator = function () {
+				_.bar.stop();
+				_.bar.set(1.0);
+			};
+			checkForPendrives();
+		}
 	}, {
 		key: 'initSync',
 		value: function initSync(e) {
 			initPendriveSync();
+			startDownloadLoader();
+		}
+	}, {
+		key: 'startDownloadLoader',
+		value: function startDownloadLoader() {
+			var _ = this;
+			var z = 1.0;
+			this.bar.animate(z);
+			z = 0.0;
+			setInterval(function () {
+				_.bar.animate(z);
+				if (z === 1.0) {
+					z = 0.0;
+				} else {
+					z = 1.0;
+				}
+			}, 2000);
 		}
 	}, {
 		key: 'render',
@@ -1113,11 +1121,21 @@ var PendriveSyncComponent = function (_Component) {
 					{ className: 'col-md-12' },
 					_react2.default.createElement(
 						'div',
+						{ className: 'col-md-1 course-card-left-container videoDownloadLoader' },
+						_react2.default.createElement('div', { ref: 'downloadLoader' })
+					),
+					_react2.default.createElement(
+						'div',
 						{ className: 'col-md-7 no-left-padding col-md-offset-1' },
-						_react2.default.createElement(
+						this.state.pendriveConnected && _react2.default.createElement(
 							'h3',
 							{ className: 'server-sync-text' },
-							'Your app is connected to UPSC Pathshala Server'
+							'Your app is connected to UPSC Pathshala Pendrive'
+						),
+						!this.state.pendriveConnected && _react2.default.createElement(
+							'h3',
+							{ className: 'server-sync-text' },
+							'Pendrive is not connected. Please connect the pendrive and then click on pendrive sync button.'
 						)
 					),
 					_react2.default.createElement(
@@ -1173,11 +1191,43 @@ var ServerSyncComponent = function (_Component) {
 
 	_createClass(ServerSyncComponent, [{
 		key: 'componentDidMount',
-		value: function componentDidMount() {}
+		value: function componentDidMount() {
+			this.bar = new ProgressBar.Circle(this.refs.downloadLoader, {
+				strokeWidth: 3,
+				easing: 'easeInOut',
+				duration: 1000,
+				color: '#0c9928',
+				trailColor: '#0c9928',
+				trailWidth: 0.3,
+				svgStyle: null
+			});
+
+			window.setServerSyncCompleteIndicator = function () {
+				_.bar.stop();
+				_.bar.set(1.0);
+			};
+		}
 	}, {
 		key: 'initSync',
 		value: function initSync(e) {
 			initServerSync();
+			startDownloadLoader();
+		}
+	}, {
+		key: 'startDownloadLoader',
+		value: function startDownloadLoader() {
+			var _ = this;
+			var z = 1.0;
+			this.bar.animate(z);
+			z = 0.0;
+			setInterval(function () {
+				_.bar.animate(z);
+				if (z === 1.0) {
+					z = 0.0;
+				} else {
+					z = 1.0;
+				}
+			}, 2000);
 		}
 	}, {
 		key: 'render',
@@ -1188,6 +1238,11 @@ var ServerSyncComponent = function (_Component) {
 				_react2.default.createElement(
 					'div',
 					{ className: 'col-md-12' },
+					_react2.default.createElement(
+						'div',
+						{ className: 'col-md-1 course-card-left-container videoDownloadLoader' },
+						_react2.default.createElement('div', { ref: 'downloadLoader' })
+					),
 					_react2.default.createElement(
 						'div',
 						{ className: 'col-md-7 no-left-padding col-md-offset-1' },
@@ -1260,9 +1315,29 @@ var UnitComponent = function (_Component) {
 	_createClass(UnitComponent, [{
 		key: 'componentDidMount',
 		value: function componentDidMount() {
+			this.bar = new ProgressBar.Circle(this.refs.downloadLoader, {
+				strokeWidth: 3,
+				easing: 'easeInOut',
+				duration: 1000,
+				color: '#0c9928',
+				trailColor: '#0c9928',
+				trailWidth: 0.3,
+				svgStyle: null
+			});
+
 			if (checkIfUnitInDownloads(this.props.unit.id)) {
 				this.setState(function (previousState) {
 					return { isDownloading: true };
+				});
+				startDownloadLoader();
+			}
+
+			if (this.props.unit.videosNotDownloaded === 0) {
+				this.bar.set(1.0);
+				this.setState(function (previousState) {
+					return {
+						allVideosDownloaded: true
+					};
 				});
 			}
 		}
@@ -1285,6 +1360,8 @@ var UnitComponent = function (_Component) {
 							isDownloading: false
 						};
 					});
+					this.bar.stop();
+					this.bar.set(1.0);
 				} else {
 					if (checkIfUnitInDownloads(this.props.unit.id)) {
 						var currentProgress = 0;
@@ -1298,6 +1375,8 @@ var UnitComponent = function (_Component) {
 						this.setState(function (previousState) {
 							return { isDownloading: false };
 						});
+						this.bar.stop();
+						this.bar.set(0.0);
 					}
 				}
 				unitsDb.update({
@@ -1317,22 +1396,17 @@ var UnitComponent = function (_Component) {
 			this.setState(function (previousState) {
 				return { isDownloading: true };
 			});
-
-			var bar = new ProgressBar.Circle(this.refs.downloadLoader, {
-				strokeWidth: 3,
-				easing: 'easeInOut',
-				duration: 1000,
-				color: '#0c9928',
-				trailColor: '#0c9928',
-				trailWidth: 0.3,
-				svgStyle: null
-			});
-
+			startDownloadLoader();
+		}
+	}, {
+		key: 'startDownloadLoader',
+		value: function startDownloadLoader() {
+			var _ = this;
 			var z = 1.0;
-			bar.animate(z);
+			this.bar.animate(z);
 			z = 0.0;
 			setInterval(function () {
-				bar.animate(z);
+				_.bar.animate(z);
 				if (z === 1.0) {
 					z = 0.0;
 				} else {
@@ -1354,9 +1428,8 @@ var UnitComponent = function (_Component) {
 				{ className: 'col-md-12 course-card-container no-left-padding' },
 				_react2.default.createElement(
 					'div',
-					{ className: 'col-md-1 course-card-left-container no-left-padding' },
-					this.state.isDownloading && _react2.default.createElement('img', { src: 'assets/images/ring.png', className: 'course-card-ring' }),
-					!this.state.isDownloading && _react2.default.createElement('div', { ref: 'downloadLoader' })
+					{ className: 'col-md-1 course-card-left-container videoDownloadLoader' },
+					_react2.default.createElement('div', { ref: 'downloadLoader' })
 				),
 				_react2.default.createElement(
 					'div',
@@ -1551,10 +1624,21 @@ var VideoComponent = function (_Component) {
 		value: function componentDidMount() {
 			var _this2 = this;
 
+			this.bar = new ProgressBar.Circle(this.refs.downloadLoader, {
+				strokeWidth: 3,
+				easing: 'easeInOut',
+				duration: 1000,
+				color: '#0c9928',
+				trailColor: '#0c9928',
+				trailWidth: 0.3,
+				svgStyle: null
+			});
+
 			if (checkIfVideoInDownloads(this.props.video.id)) {
 				this.setState(function (previousState) {
 					return { isDownloading: true };
 				});
+				startDownloadLoader();
 			}
 			if (this.props.video.isDownloaded) {
 				this.setState(function (previousState) {
@@ -1564,6 +1648,7 @@ var VideoComponent = function (_Component) {
 						localPath: _this2.props.video.localPath
 					};
 				});
+				this.bar.set(1.0);
 			}
 		}
 	}, {
@@ -1571,6 +1656,8 @@ var VideoComponent = function (_Component) {
 		value: function navigate(id, videoTitle, localPath, e) {
 			if (this.state.isDownloaded) {
 				this.props.goToPlayer(id, videoTitle, this.state.localPath);
+			} else {
+				showAlert();
 			}
 		}
 	}, {
@@ -1580,6 +1667,23 @@ var VideoComponent = function (_Component) {
 			this.setState(function (previousState) {
 				return { isDownloading: true };
 			});
+			startDownloadLoader();
+		}
+	}, {
+		key: 'startDownloadLoader',
+		value: function startDownloadLoader() {
+			var _ = this;
+			var z = 1.0;
+			this.bar.animate(z);
+			z = 0.0;
+			setInterval(function () {
+				_.bar.animate(z);
+				if (z === 1.0) {
+					z = 0.0;
+				} else {
+					z = 1.0;
+				}
+			}, 2000);
 		}
 	}, {
 		key: 'componentWillReceiveProps',
@@ -1592,6 +1696,8 @@ var VideoComponent = function (_Component) {
 						localPath: nextProps.downloadedVideo.localPath
 					};
 				});
+				this.bar.stop();
+				this.bar.set(1.0);
 			}
 
 			if (nextProps.downloadProgress.url === this.props.video.url) {
@@ -1618,8 +1724,8 @@ var VideoComponent = function (_Component) {
 				{ className: 'col-md-12 course-card-container no-left-padding' },
 				_react2.default.createElement(
 					'div',
-					{ className: 'col-md-1 course-card-left-container no-left-padding' },
-					_react2.default.createElement('img', { src: 'assets/images/play.png', className: 'course-card-ring' })
+					{ className: 'col-md-1 course-card-left-container videoDownloadLoader' },
+					_react2.default.createElement('div', { ref: 'downloadLoader' })
 				),
 				_react2.default.createElement(
 					'div',
@@ -2328,7 +2434,6 @@ var LoginContainer = function (_React$Component) {
 					_.setState({ shouldRender: true });
 				} else {
 					setUserData(docs[0].email, docs[0].id);
-					console.log('idhar');
 					toggleFooterStyle();
 					_.props.history.push('/home');
 				}
@@ -2342,10 +2447,13 @@ var LoginContainer = function (_React$Component) {
 		value: function componentDidUpdate() {
 			// Checking if the user field in props is set or not & redirecting to course page if set
 			var responseData = this.props.authReducer.data;
-			if (responseData.length === 1) {
+			if (responseData.length === 1 && responseData[0].success) {
 				toggleFooterStyle();
-				console.log('udhar');
 				this.props.history.push('/home');
+			}
+
+			if (responseData.length === 1 && responseData[0].failed) {
+				showFailedError();
 			}
 		}
 	}, {
@@ -2790,17 +2898,19 @@ function getUser(_ref) {
 								if (err) {
 									console.log(err);
 									var response = {
-										'success': false
+										'success': false,
+										'failed': true
 									};
 									resolve(response);
 								} else {
 									var resp = JSON.parse(body);
 									var _response = {
-										'success': false
+										'success': false,
+										'failed': false
 									};
 									if (resp.success) {
 										_response = {
-											'success': false
+											'success': true
 										};
 									}
 									userDb.insert({

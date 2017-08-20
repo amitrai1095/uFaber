@@ -49,6 +49,9 @@ export default class VideoComponent extends Component {
 		if(this.state.isDownloaded){
 			this.props.goToPlayer(id, videoTitle, this.state.localPath)
 		}
+		else{
+			showAlert()
+		}
 	}
 
 	download(videoId, e){

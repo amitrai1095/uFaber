@@ -37,6 +37,21 @@ function getDrive(){
 	});
 }
 
+function checkForPendrives(){
+	diskinfo.getDrives(function(err, drives) {
+		for (let i = 0; i < drives.length; i++) {
+			if(drives[i].filesystem.indexOf("Removable") > -1){
+				let drive = drives[i].mounted;
+				fs.readdirSync(drive).forEach(file => {
+					if(file === "data.json"){
+						setNoPendriveText()
+					}
+				})
+			}
+		}
+	});
+}
+
 // Function to save pendrive configuration file to local db
 function getJSONFile(mountLocation){
 	let filePath = mountLocation + '/data.json'
@@ -163,11 +178,11 @@ function savePendriveResources(){
 // Function to start transferring videos from pendrive to app installation path
 function startVideoTransfer(){
 	for(let i=0; i<resourcesPaths.length; i++){
-		extractPendriveFile(resourcesPaths[i])
+		extractPendriveFile(resourcesPaths[i], i)
 	}
 }
 
-function extractPendriveFile(currentResourcePath){
+function extractPendriveFile(currentResourcePath, currentWorkingIndex){
 	let fileName = currentResourcePath.fileName
 	let thisVideoId = currentResourcePath.id
 	let thisUnitId = currentResourcePath.unitId
@@ -196,11 +211,11 @@ function extractPendriveFile(currentResourcePath){
 	      console.log(err)
 	    }
 	    console.log(extractionPath)
-	    saveVideoPath(videoUrl, thisVideoId, thisUnitId, thisCourseId)
+	    saveVideoPath(videoUrl, thisVideoId, thisUnitId, thisCourseId, currentWorkingIndex)
 	})
 }
 
-function saveVideoPath(videoUrl, thisVideoId, thisUnitId, thisCourseId){
+function saveVideoPath(videoUrl, thisVideoId, thisUnitId, thisCourseId, currentWorkingIndex){
 	videosDb.update({
 		id: thisVideoId,
 		unitId: thisUnitId,
@@ -211,5 +226,8 @@ function saveVideoPath(videoUrl, thisVideoId, thisUnitId, thisCourseId){
 		}
 	}, function(err, doc){
 		console.log('done')
+		if(currentWorkingIndex === resourcesPaths.length){
+			setPendriveSyncCompleteIndicator()
+		}
 	})
 }

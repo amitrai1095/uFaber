@@ -28,18 +28,20 @@ export function* getUser({payload}){
 				if(err){
 					console.log(err)
 					let response = {
-						'success': false
+						'success': false,
+						'failed': true
 					}
 					resolve(response)
 				}
 				else{
 					let resp = JSON.parse(body)
 					let response = {
-						'success': false
+						'success': false,
+						'failed': false
 					}
 					if(resp.success){
 						response = {
-							'success': false
+							'success': true
 						}
 					}
 					userDb.insert({

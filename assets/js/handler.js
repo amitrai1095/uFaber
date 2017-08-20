@@ -33,6 +33,14 @@ function createDirectories(directoryList){
   }
 }
 
+function showAlert(){
+  alert('Video not yet downloaded. Please download the video first', "Warning")
+}
+
+function showFailedError(){
+  alert('Unable to connect to the Internet', "Warning")
+}
+
 function setIsInUnitsFlag(){
   isInUnitsComponent = true
   isInVideosComponent = false
