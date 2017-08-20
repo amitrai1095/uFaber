@@ -41,6 +41,14 @@ function showFailedError(){
   alert('Unable to connect to the Internet', "Warning")
 }
 
+function showInCorrectCredsError(){
+  alert('Invalid Credentials', "Warning")
+}
+
+function showInCorrectEmailError(){
+  alert('Invalid EMail ID', "Warning")
+}
+
 function setIsInUnitsFlag(){
   isInUnitsComponent = true
   isInVideosComponent = false

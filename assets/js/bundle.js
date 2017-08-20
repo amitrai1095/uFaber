@@ -2421,6 +2421,8 @@ var LoginContainer = function (_React$Component) {
 
 		var _this = _possibleConstructorReturn(this, (LoginContainer.__proto__ || Object.getPrototypeOf(LoginContainer)).call(this, props));
 
+		console.log('in mount');
+		console.log(_this.props.authReducer);
 		_this.state = {};
 		var _ = _this;
 		if (justLoggedOutFlag) {
@@ -2447,13 +2449,21 @@ var LoginContainer = function (_React$Component) {
 		value: function componentDidUpdate() {
 			// Checking if the user field in props is set or not & redirecting to course page if set
 			var responseData = this.props.authReducer.data;
+			console.log(this.props.authReducer);
 			if (responseData.length === 1 && responseData[0].success) {
 				toggleFooterStyle();
+				this.props.authReducer.data = [];
 				this.props.history.push('/home');
+			}
+
+			if (responseData.length === 1 && !responseData[0].success && !responseData[0].failed) {
+				showInCorrectCredsError();
+				this.props.authReducer.data = [];
 			}
 
 			if (responseData.length === 1 && responseData[0].failed) {
 				showFailedError();
+				this.props.authReducer.data = [];
 			}
 		}
 	}, {
@@ -2469,17 +2479,14 @@ var LoginContainer = function (_React$Component) {
 				validEmail = false;
 			}
 			if (validEmail) {
-				this.setState(function (previousState) {
-					return { emailErrorStyleClass: 'noInvalidEmailError' };
-				});
+				console.log('in auth fuct');
+				console.log(this.props.authReducer);
 				this.props.getUser({
 					"email": userEmail,
 					"password": userPassword
 				});
 			} else {
-				this.setState(function (previousState) {
-					return { emailErrorStyleClass: 'invalidEmailError' };
-				});
+				showInCorrectEmailError();
 			}
 		}
 	}, {
@@ -2912,15 +2919,18 @@ function getUser(_ref) {
 										_response = {
 											'success': true
 										};
+										userDb.insert({
+											email: email,
+											password: password,
+											id: resp.user.id,
+											name: resp.user.name
+										}, function (err, docs) {
+											resolve(_response);
+										});
 									}
-									userDb.insert({
-										email: email,
-										password: password,
-										id: resp.user.id,
-										name: resp.user.name
-									}, function (err, docs) {
+									if (resp.error) {
 										resolve(_response);
-									});
+									}
 								}
 							});
 						});

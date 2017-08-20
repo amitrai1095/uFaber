@@ -43,15 +43,18 @@ export function* getUser({payload}){
 						response = {
 							'success': true
 						}
+						userDb.insert({
+							email : email,
+							password : password,
+							id: resp.user.id,
+							name: resp.user.name
+						}, function(err, docs){
+							resolve(response)
+						})
 					}
-					userDb.insert({
-						email : email,
-						password : password,
-						id: resp.user.id,
-						name: resp.user.name
-					}, function(err, docs){
+					if(resp.error){
 						resolve(response)
-					})
+					}
 				}
 		});
 	})

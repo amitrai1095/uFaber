@@ -7,6 +7,8 @@ class LoginContainer extends React.Component {
 
 	constructor(props){
 		super(props)
+		console.log('in mount')
+		console.log(this.props.authReducer)
 		this.state = {}
 		let _ = this
 		if(justLoggedOutFlag){
@@ -31,13 +33,21 @@ class LoginContainer extends React.Component {
 	componentDidUpdate(){
 		// Checking if the user field in props is set or not & redirecting to course page if set
 		let responseData = this.props.authReducer.data
+		console.log(this.props.authReducer)
 		if(responseData.length === 1 && responseData[0].success){
 			toggleFooterStyle()
+			this.props.authReducer.data = []
 			this.props.history.push('/home');
+		}
+
+		if(responseData.length === 1 && !responseData[0].success && !responseData[0].failed){
+			showInCorrectCredsError()
+			this.props.authReducer.data = []
 		}
 
 		if(responseData.length === 1 && responseData[0].failed){
 			showFailedError()
+			this.props.authReducer.data = []
 		}
 	}
 
@@ -52,18 +62,15 @@ class LoginContainer extends React.Component {
 	        validEmail = false
 	    }
 	    if(validEmail){
-	    	this.setState(previousState => {
-	    		return { emailErrorStyleClass : 'noInvalidEmailError' }
-	    	})
+	    	console.log('in auth fuct')
+	    	console.log(this.props.authReducer)
 			this.props.getUser({
 				"email" : userEmail,
 				"password" : userPassword
 			})
 	    }
 	    else{
-	    	this.setState(previousState => {
-	    		return { emailErrorStyleClass : 'invalidEmailError' }
-	    	})
+	    	showInCorrectEmailError()
 	    }
 	}
 
